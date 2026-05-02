@@ -40,4 +40,10 @@ public interface EntryDao {
 
     @Query("SELECT * FROM entries WHERE is_deleted = 1 ORDER BY deleted_at DESC")
     LiveData<List<Entry>> getDeletedEntries();
+
+    @Query("SELECT * FROM entries WHERE is_deleted = 0 ORDER BY timestamp DESC")
+    LiveData<List<Entry>> getAllActiveEntriesDesc(); // Новые сверху
+
+    @Query("SELECT * FROM entries WHERE is_deleted = 0 ORDER BY timestamp ASC")
+    LiveData<List<Entry>> getAllActiveEntriesAsc();  // Старые сверху
 }

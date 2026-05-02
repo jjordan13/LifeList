@@ -46,4 +46,12 @@ public class EntryRepository {
     public Entry getEntryById(int id) {
         return entryDao.getEntryById(id);
     }
+
+    public LiveData<List<Entry>> getAllEntriesDesc() {
+        return entryDao.getAllActiveEntriesDesc();
+    }
+
+    public LiveData<List<Entry>> getAllEntriesAsc() {
+        return entryDao.getAllActiveEntriesAsc();
+    }
 }

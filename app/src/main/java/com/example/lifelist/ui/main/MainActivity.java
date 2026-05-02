@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private EntryViewModel entryViewModel;
     private RecyclerView recyclerView;
     private EntriesAdapter adapter;
+    private FloatingActionButton fabSort;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +36,10 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewEntries);
         FloatingActionButton fabAdd = findViewById(R.id.fabAddEntry);
+        fabSort = findViewById(R.id.fabSort);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new EntriesAdapter(entry -> {
-            // Открытие редактора для редактирования
             Intent intent = new Intent(MainActivity.this, EditorActivity.class);
             intent.putExtra("entry_id", entry.getId());
             startActivity(intent);
@@ -47,8 +48,24 @@ public class MainActivity extends AppCompatActivity {
 
         entryViewModel = new ViewModelProvider(this).get(EntryViewModel.class);
 
+        // Наблюдаем за списком записей
         entryViewModel.getAllEntries().observe(this, entries -> {
             adapter.setEntries(entries);
+        });
+
+        // Наблюдаем за состоянием сортировки для обновления иконки/подсказки
+        entryViewModel.getIsAscending().observe(this, isAsc -> {
+            if (isAsc) {
+                fabSort.setContentDescription("Сортировка: Сначала старые");
+                // Можно поменять иконку, если есть ресурсы
+            } else {
+                fabSort.setContentDescription("Сортировка: Сначала новые");
+            }
+        });
+
+        // Клик по кнопке сортировки
+        fabSort.setOnClickListener(v -> {
+            entryViewModel.toggleSortOrder();
         });
 
         fabAdd.setOnClickListener(v -> {
