@@ -1,0 +1,27 @@
+# Собираемые файлы
+*.apk
+*.ap_
+*.aab
+
+# Файлы сборки
+/build/
+/app/build/
+/*/build/
+
+# Локальные настройки (пути к SDK, ключи)
+local.properties
+*.iml
+
+# IDE и система контроля версий
+.idea/
+.gradle/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Секретные ключи (если будут)
+google-services.json
