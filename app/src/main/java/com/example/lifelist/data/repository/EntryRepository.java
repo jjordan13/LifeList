@@ -13,18 +13,49 @@ import java.util.concurrent.Executors;
 
 public class EntryRepository {
     private final EntryDao entryDao;
-    private final LiveData<List<Entry>> allEntries;
     private final ExecutorService executorService;
 
     public EntryRepository(Application application) {
         AppDatabase database = AppDatabase.getInstance(application);
         entryDao = database.entryDao();
-        allEntries = entryDao.getAllActiveEntries();
         executorService = Executors.newFixedThreadPool(4);
     }
 
-    public LiveData<List<Entry>> getAllEntries() {
-        return allEntries;
+    public LiveData<List<Entry>> getAllEntriesDesc() {
+        return entryDao.getAllActiveEntriesDesc();
+    }
+
+    public LiveData<List<Entry>> getAllEntriesAsc() {
+        return entryDao.getAllActiveEntriesAsc();
+    }
+
+    public LiveData<List<Entry>> searchEntries(String query) {
+        return entryDao.searchEntries("%" + query + "%");
+    }
+
+    // Фильтр по настроению
+    public LiveData<List<Entry>> getEntriesByMood(int mood) {
+        return entryDao.getEntriesByMood(mood);
+    }
+
+    // Фильтр по конкретной дате
+    public LiveData<List<Entry>> getEntriesByDate(long startOfDay, long endOfDay) {
+        return entryDao.getEntriesByDate(startOfDay, endOfDay);
+    }
+
+    // Фильтр по диапазону дат
+    public LiveData<List<Entry>> getEntriesByDateRange(long startDate, long endDate) {
+        return entryDao.getEntriesByDateRange(startDate, endDate);
+    }
+
+    // Комбинированный фильтр: настроение + диапазон дат
+    public LiveData<List<Entry>> getEntriesByMoodAndDateRange(int mood, long startDate, long endDate) {
+        return entryDao.getEntriesByMoodAndDateRange(mood, startDate, endDate);
+    }
+
+    // Комбинированный фильтр: поиск + настроение
+    public LiveData<List<Entry>> searchEntriesByMood(String query, int mood) {
+        return entryDao.searchEntriesByMood("%" + query + "%", mood);
     }
 
     public void insert(Entry entry) {
@@ -45,13 +76,5 @@ public class EntryRepository {
 
     public Entry getEntryById(int id) {
         return entryDao.getEntryById(id);
-    }
-
-    public LiveData<List<Entry>> getAllEntriesDesc() {
-        return entryDao.getAllActiveEntriesDesc();
-    }
-
-    public LiveData<List<Entry>> getAllEntriesAsc() {
-        return entryDao.getAllActiveEntriesAsc();
     }
 }

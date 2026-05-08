@@ -1,6 +1,8 @@
 package com.example.lifelist.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
 
@@ -9,19 +11,22 @@ public class SecurityManager {
     private static final String KEY_PIN = "owner_pin";
     private static final String KEY_ROLE = "current_role";
     private static final String KEY_BIOMETRIC_ENABLED = "biometric_enabled";
+    private static final String TAG = "SecurityManager";
 
     public static final String ROLE_OWNER = "OWNER";
     public static final String ROLE_GUEST = "GUEST";
 
     private static SecurityManager instance;
-    private final EncryptedSharedPreferences prefs;
+    private SharedPreferences prefs;
+    private boolean encryptionFailed = false;
 
     private SecurityManager(Context context) {
         try {
             MasterKey masterKey = new MasterKey.Builder(context)
                     .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
                     .build();
-            prefs = (EncryptedSharedPreferences) EncryptedSharedPreferences.create(
+
+            prefs = EncryptedSharedPreferences.create(
                     context,
                     PREFS_NAME,
                     masterKey,
@@ -29,7 +34,10 @@ public class SecurityManager {
                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             );
         } catch (Exception e) {
-            throw new RuntimeException("Ошибка инициализации SecurityManager", e);
+            // Если шифрование не работает — используем обычные SharedPreferences
+            Log.e(TAG, "EncryptedSharedPreferences failed, falling back to regular prefs", e);
+            encryptionFailed = true;
+            prefs = context.getSharedPreferences(PREFS_NAME + "_fallback", Context.MODE_PRIVATE);
         }
     }
 
@@ -59,7 +67,7 @@ public class SecurityManager {
     }
 
     public String getRole() {
-        return prefs.getString(KEY_ROLE, ROLE_OWNER); // По умолчанию владелец
+        return prefs.getString(KEY_ROLE, ROLE_OWNER);
     }
 
     public boolean isOwner() {
@@ -77,5 +85,14 @@ public class SecurityManager {
 
     public void setBiometricEnabled(boolean enabled) {
         prefs.edit().putBoolean(KEY_BIOMETRIC_ENABLED, enabled).apply();
+    }
+
+    // --- Метод для сброса при критической ошибке (опционально) ---
+    public void resetSecurityData() {
+        prefs.edit().clear().apply();
+    }
+
+    public boolean isEncryptionWorking() {
+        return !encryptionFailed;
     }
 }

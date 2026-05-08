@@ -19,13 +19,64 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- Панель поиска -->
+    <LinearLayout
+        android:id="@+id/searchContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="?attr/colorSurface"
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:hint="Поиск по записям">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:imeOptions="actionSearch"
+                android:maxLines="1"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageButton
+            android:id="@+id/btnClearSearch"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_gravity="center_vertical"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Очистить поиск"
+            android:visibility="gone"/>
+
+        <ImageButton
+            android:id="@+id/btnFilter"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_gravity="center_vertical"
+            android:src="@android:drawable/ic_menu_search"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Фильтр"
+            android:tooltipText="Фильтр"/>
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewEntries"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="8dp"
+        android:layout_marginTop="112dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
+    <!-- Кнопка сортировки (слева) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabSort"
         android:layout_width="wrap_content"
@@ -37,6 +88,7 @@
         app:backgroundTint="?attr/colorSecondary"
         app:tint="@android:color/white"/>
 
+    <!-- Кнопка добавления (справа) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddEntry"
         android:layout_width="wrap_content"

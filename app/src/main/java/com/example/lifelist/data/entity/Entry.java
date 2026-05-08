@@ -21,8 +21,9 @@ public class Entry implements Serializable {
     @ColumnInfo(name = "timestamp")
     private long timestamp;
 
+    // Новое поле для настроения
     @ColumnInfo(name = "mood")
-    private String mood;
+    private int mood; // 0: Ужасно, 1: Плохо, 2: Нормально, 3: Хорошо, 4: Прекрасно
 
     @ColumnInfo(name = "is_deleted")
     private boolean isDeleted;
@@ -30,8 +31,7 @@ public class Entry implements Serializable {
     @ColumnInfo(name = "deleted_at")
     private Long deletedAt;
 
-    // Конструктор
-    public Entry(String title, String content, long timestamp, String mood) {
+    public Entry(String title, String content, long timestamp, int mood) {
         this.title = title;
         this.content = content;
         this.timestamp = timestamp;
@@ -39,7 +39,7 @@ public class Entry implements Serializable {
         this.isDeleted = false;
     }
 
-    // Геттеры и сеттеры
+    // --- Геттеры и сеттеры ---
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -52,8 +52,8 @@ public class Entry implements Serializable {
     public long getTimestamp() { return timestamp; }
     public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
 
-    public String getMood() { return mood; }
-    public void setMood(String mood) { this.mood = mood; }
+    public int getMood() { return mood; }
+    public void setMood(int mood) { this.mood = mood; }
 
     public boolean isDeleted() { return isDeleted; }
     public void setDeleted(boolean deleted) { isDeleted = deleted; }

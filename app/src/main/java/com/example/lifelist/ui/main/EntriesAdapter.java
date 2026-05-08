@@ -58,12 +58,14 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntryVie
         private final TextView tvTitle;
         private final TextView tvContent;
         private final TextView tvDate;
+        private final TextView tvMood; // Новое поле
 
         public EntryViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvContent = itemView.findViewById(R.id.tvContent);
             tvDate = itemView.findViewById(R.id.tvDate);
+            tvMood = itemView.findViewById(R.id.tvMood); // Инициализация
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
@@ -79,6 +81,16 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntryVie
 
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
             tvDate.setText(sdf.format(new Date(entry.getTimestamp())));
+
+            // Отображаем настроение
+            switch (entry.getMood()) {
+                case 0: tvMood.setText("😡"); break;
+                case 1: tvMood.setText("😢"); break;
+                case 2: tvMood.setText("😐"); break;
+                case 3: tvMood.setText("🙂"); break;
+                case 4: tvMood.setText("😍"); break;
+                default: tvMood.setText("😐");
+            }
         }
     }
 }
